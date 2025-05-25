@@ -29,7 +29,6 @@ import {
   FaXRay
 } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const [papers, setPapers] = useAtom(papersAtom);
