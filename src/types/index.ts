@@ -49,7 +49,7 @@ export interface Paper {
 }
 
 export interface FilterState {
-  yearRange: [number, number];
+  selectedYear: number | null;
   selectedCountries: string[];
   selectedAlgorithms: string[];
   selectedFeatures: string[];

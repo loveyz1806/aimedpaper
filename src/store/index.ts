@@ -6,7 +6,7 @@ export const papersAtom = atom<Paper[]>([]);
 export const searchQueryAtom = atom<string>("");
 
 export const filterStateAtom = atom<FilterState>({
-  yearRange: [2000, 2024],
+  selectedYear: null,
   selectedCountries: [],
   selectedAlgorithms: [],
   selectedFeatures: [],
@@ -31,9 +31,12 @@ export const filteredPapersAtom = atom((get) => {
       
       if (!matchesSearch) return false;
     }
+    
     // 年份过滤
-    if (paper.year < filterState.yearRange[0] || paper.year > filterState.yearRange[1]) {
-      return false;
+    if (filterState.selectedYear !== null) {
+      if (paper.year !== filterState.selectedYear) {
+        return false;
+      }
     }
     
     // 国家过滤

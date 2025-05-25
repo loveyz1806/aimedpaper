@@ -3,15 +3,10 @@
 import { useAtom } from "jotai";
 import { filterStateAtom, papersAtom } from "@/store";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 
 export function DashboardFilters() {
   const [filterState, setFilterState] = useAtom(filterStateAtom);
   const [papers] = useAtom(papersAtom);
-
-  const years = Array.from(
-    new Set(papers.map((paper) => paper.year))
-  ).sort();
 
   // 统计每个国家的文章数量并按数量排序
   const countryStats = papers.reduce((acc, paper) => {
@@ -29,10 +24,6 @@ export function DashboardFilters() {
   if (countries.length > 0) {
     console.log("Top 5 countries by paper count:", countries.slice(0, 5));
   }
-
-  // 安全地计算年份范围
-  const minYear = years.length > 0 ? Math.min(...years) : 2000;
-  const maxYear = years.length > 0 ? Math.max(...years) : 2024;
 
   // AI算法映射表
   const algorithmMapping = {
@@ -150,31 +141,7 @@ export function DashboardFilters() {
     .sort((a, b) => b.count - a.count); // 按文章数量降序排序
 
   return (
-    <div className="space-y-6">
-      <div>
-        <label className="text-sm font-semibold text-slate-700 mb-3 block">年份范围</label>
-        <div className="mt-2">
-          <div className="flex justify-between text-xs text-slate-600 mb-2 font-medium">
-            <span>{filterState.yearRange[0]}</span>
-            <span>{filterState.yearRange[1]}</span>
-          </div>
-          <Slider
-            value={filterState.yearRange}
-            min={minYear}
-            max={maxYear}
-            step={1}
-            onValueChange={(value) =>
-              setFilterState({ ...filterState, yearRange: value as [number, number] })
-            }
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs text-slate-500 mt-1">
-            <span>{minYear}</span>
-            <span>{maxYear}</span>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <div>
         <label className="text-sm font-semibold text-slate-700 mb-3 block">国家/地区</label>
         <Select

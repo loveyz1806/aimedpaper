@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function filterPapers(papers: Paper[], filters: FilterState): Paper[] {
   return papers.filter((paper) => {
-    // Year range filter
-    if (paper.year < filters.yearRange[0] || paper.year > filters.yearRange[1]) {
+    // Year filter
+    if (filters.selectedYear !== null && paper.year !== filters.selectedYear) {
       return false;
     }
 
