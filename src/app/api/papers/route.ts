@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
-import * as XLSX from "xlsx";
 import { Paper } from "@/types";
 import path from "path";
 import fs from "fs";
 
 export async function GET() {
   try {
-    // Read the Excel file from the public directory
-    const filePath = path.join(process.cwd(), "public", "test1.xlsx");
+    // Read the JSON file from the public directory
+    const filePath = path.join(process.cwd(), "public", "data.json");
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {
       console.error(`File not found at path: ${filePath}`);
       return NextResponse.json(
-        { error: "Excel file not found" },
+        { error: "JSON data file not found" },
         { status: 404 }
       );
     }
@@ -24,21 +23,19 @@ export async function GET() {
     } catch {
       console.error(`File not readable at path: ${filePath}`);
       return NextResponse.json(
-        { error: "Excel file not readable" },
+        { error: "JSON data file not readable" },
         { status: 403 }
       );
     }
 
-    console.log(`Reading Excel file from: ${filePath}`);
-    // Read file content first
-    const fileContent = fs.readFileSync(filePath);
-    const workbook = XLSX.read(fileContent, { type: 'buffer' });
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = XLSX.utils.sheet_to_json(worksheet);
+    console.log(`Reading JSON file from: ${filePath}`);
+    // Read and parse JSON file
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const data = JSON.parse(fileContent);
 
     // Transform the data to match our Paper type
-    const papers: Paper[] = data.map((row) => {
-      const typedRow = row as Record<string, unknown>;
+    const papers: Paper[] = data.map((row: Record<string, unknown>) => {
+      const typedRow = row;
       return {
         pmid: typedRow.pmid?.toString() || "",
         doi: typedRow.doi?.toString() || "",
@@ -111,9 +108,9 @@ export async function GET() {
     console.log(`Successfully processed ${papers.length} papers`);
     return NextResponse.json(papers);
   } catch (error) {
-    console.error("Error reading Excel file:", error);
+    console.error("Error reading JSON file:", error);
     return NextResponse.json(
-      { error: "Failed to read Excel file", details: error instanceof Error ? error.message : String(error) },
+      { error: "Failed to read JSON file", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
